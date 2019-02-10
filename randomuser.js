@@ -7,22 +7,28 @@ var emailDisp = document.querySelector("#email");
 var cityDisp = document.querySelector("#city");
 btn.addEventListener("click", function() {
     fetch(url)
-    .then(function(res){
-        return res.json();
-    })
-    .then(function(data) {
-        var name = data.results[0].name.first + " " + data.results[0].name.last;
-        var username = data.results[0].login.username;
-        var email = data.results[0].email;
-        var city = data.results[0].location.city;
-        var image = data.results[0].picture.medium;
-        fullnameDisp.innerText = name;
-        usernameDisp.innerText = username;
-        emailDisp.innerText = email;
-        cityDisp.innerText = city;
-        avatar.src = image;
-    })
-    .catch(function(err) {
-        console.log(err);
-    })
-});
+    .then(parseJSON)
+    .then(updateProfile)
+    .catch(handelError)
+}); 
+
+function parseJSON(res){
+    return res.json().then(function(parsedData) {
+        return parsedData.results[0];
+    });
+}
+function updateProfile(data) {
+    var name = data.name.first + " " + data.name.last;
+    var username = data.login.username;
+    var email = data.email;
+    var city = data.location.city;
+    var image = data.picture.medium;
+    fullnameDisp.innerText = name;
+    usernameDisp.innerText = username;
+    emailDisp.innerText = email;
+    cityDisp.innerText = city;
+    avatar.src = image;
+}
+function handelError(err) {
+    console.log(err);
+}
